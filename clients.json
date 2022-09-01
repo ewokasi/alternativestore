@@ -1,0 +1,48 @@
+{
+  "clients": [
+    {
+      "username": "Ewokasi",
+      "chat_id": 637382945,
+      "cart": [
+        {
+          "maker": "MASSKING",
+          "taste": "\u042d\u043d\u0435\u0440\u0433\u0435\u0442\u0438\u043a \u26a1"
+        }
+      ]
+    },
+    {
+      "username": "ewoksicilin",
+      "chat_id": 1931633887,
+      "cart": []
+    },
+    {
+      "username": null,
+      "chat_id": 1835580212,
+      "cart": []
+    },
+    {
+      "username": "GoodBoy0330",
+      "chat_id": 1835580212,
+      "cart": [
+        {
+          "maker": "MASSKING",
+          "taste": "\u042f\u0431\u043b\u043e\u043a\u043e"
+        },
+        {
+          "maker": "HQD",
+          "taste": "\u041a\u0430\u043f\u0443\u0447\u0438\u043d\u043e"
+        }
+      ]
+    },
+    {
+      "username": "paradisehell1",
+      "chat_id": 438913614,
+      "cart": []
+    },
+    {
+      "username": "ivaline",
+      "chat_id": 570554640,
+      "cart": []
+    }
+  ]
+}
