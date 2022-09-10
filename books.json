@@ -1,13 +1,24 @@
 {
   "books": [
     {
-      "username": "Ewokasi",
-      "chat_id": 637382945,
-      "key": "E-492",
+      "username": "ewoksicilin",
+      "chat_id": 1931633887,
+      "key": "E-593",
       "cart": [
         {
-          "maker": "PUFF",
-          "taste": "\u041f\u0435\u0440\u0441\u0438\u043a \ud83c\udf51"
+          "maker": "MASSKING",
+          "taste": "\u0410\u0440\u0431\u0443\u0437 \ud83c\udf49"
+        }
+      ]
+    },
+    {
+      "username": "ewoksicilin",
+      "chat_id": 1931633887,
+      "key": "E-106",
+      "cart": [
+        {
+          "maker": "MASSKING",
+          "taste": "\u0410\u0440\u0431\u0443\u0437 \ud83c\udf49"
         }
       ]
     }

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# v 0.2 pre-release
+# v 10.09.22 pre-release
 import telebot
 import catalog_controller
 import logging
@@ -13,7 +13,7 @@ logger = telebot.logger
 telebot.logger.setLevel(logging.DEBUG)
 Token = '5442133786:AAE-rRU7ZbFCkKbzvgazOEhdOoZ0tvd_CP4'
 Beta_Token = '5626676453:AAHACc2r_UNmVKPP5w7b3naBTT-8aKmPTpE'
-bot = telebot.TeleBot(Beta_Token)
+bot = telebot.TeleBot(Token)
 # reading list of user with permissions
 file = open(r"admins.txt")
 admins = file.read().splitlines()
@@ -28,13 +28,17 @@ def start_answer(message):
         clients.write(f"{message.chat.username} {message.chat.id} {datetime.today()} \n")
 
     # assembling the main menu keyboard
+    photo = open("photos/mm.jpg", "rb")
     keyboard = InlineKeyboardMarkup(row_width=2)
     catalog_btn = InlineKeyboardButton(text="Каталог 📋", callback_data="catalog")
     setings_btn = InlineKeyboardButton(text="Корзина 🛒", callback_data="cart")
     call_btn = InlineKeyboardButton(text="Связаться с админом 👷", callback_data="call_admin")
     keyboard.add(catalog_btn, setings_btn, call_btn)
-    bot.send_message(message.chat.id, "Главное меню, вся навигация в этом окне через кнопки\n\nДля корректной работы бота проверьте, что у вас есть username, сделать вы это можете, нажав /username. В противном случае админ не сможет связаться с вами самостоятельно",
+    bot.send_photo(message.chat.id,photo= photo, caption ="Главное меню, вся навигация в этом окне через кнопки\n\nДля корректной работы бота проверьте, что у вас есть username, сделать вы это можете, нажав /username. В противном случае админ не сможет связаться с вами самостоятельно",
                      reply_markup=keyboard)
+    photo.close()
+    bot.edit_message_media()
+
 
 
 # ADMIN Adding a product via catalog_controller
@@ -155,7 +159,7 @@ def show_catalog(message):
 
 
 # ADMIN help menu
-@bot.message_handler(commands=["adminhelp"])
+@bot.message_handler(commands=["help"])
 def admin_help(message):
     if message.chat.username in admins:
         text = "Список команд администратора\n\n" \
@@ -166,9 +170,19 @@ def admin_help(message):
                "/cancelkey E-710 - позволяет вручную удалить заказ\n\n" \
                "/showbooks - показывает список всех активных заказов, также можно удалить заказ через кнопки\n\n" \
                "/start - вызов главного меню"
+    else:
+        text = "Список команд \n\n" \
+                "/username - чтобы узнать своё имя пользователя для корректной обработки заказов" \
+                "/start - вызов главного меню"
 
-        bot.send_message(message.chat.id, text=text)
+    bot.send_message(message.chat.id, text=text)
 
+@bot.message_handler(commands=["clients"])
+def clients(message):
+    if message.chat.username in admins:
+        with open("clients.txt",'r') as file:
+            data = file.read()
+            bot.send_message(message.chat.id, data)
 
 # Infinity polling for bot
 if __name__ == "__main__":

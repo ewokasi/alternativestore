@@ -1,6 +1,6 @@
 import datetime
 
-from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
+from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton, InputMedia
 import clients_controller
 import catalog_controller
 from catalog_controller import get_makers, get_products
@@ -17,6 +17,7 @@ def markup_preset(call, bot):
                }
     makers_kw = {}
     print(call.data)
+    photo = None
     q = 1
     # Необходимый цикл чтобы добавить callback`и для динамической сборки кнопок меню
     for key in get_makers():
@@ -36,6 +37,8 @@ def markup_preset(call, bot):
         call_btn = InlineKeyboardButton(text="Связаться с админом 👷‍", callback_data="call_admin")
         keyboard.add(catalog_btn, cart_btn, call_btn)
         text = "Главное меню, вся навигация в этом окне через кнопки"
+        photo = open(f"photos/mm.jpg", "rb")
+
 
     elif call.data == call_kw['settings']:
         back_btn = InlineKeyboardButton(text="Назад ◀", callback_data="mainmenu")
@@ -52,11 +55,15 @@ def markup_preset(call, bot):
 
         back_btn = InlineKeyboardButton(text="Назад ◀", callback_data="mainmenu")
         keyboard.add(back_btn)
+        photo = open(f"photos/mm.jpg", "rb")
+
 
     elif call.data == call_kw['call_admin']:
         text = "Напиши мне в телеграмм: @ewoksicilin"
         back_btn = InlineKeyboardButton(text="Назад ◀", callback_data="mainmenu")
         keyboard.add(back_btn)
+        photo = open(f"photos/ewoksicilin.jpg", "rb")
+
 
     elif call.data in makers_kw.values():
         text = "Товары проиводителя в наличии:"
@@ -72,6 +79,7 @@ def markup_preset(call, bot):
 
         back_btn = InlineKeyboardButton(text="Назад ◀", callback_data="catalog")
         keyboard.add(back_btn)
+        photo = open(f"photos/{call.data}.jpg", "rb")
 
     elif call.data in tastes_kw.values():
 
@@ -83,6 +91,8 @@ def markup_preset(call, bot):
         add_to_cart = InlineKeyboardButton(text="В корзину 🛒", callback_data=f"to_cart {call.data}")
         keyboard.add(add_to_cart, back_btn)
 
+
+
     elif "to_cart" in call.data:
         text = "В корзине ✅"
         clients_controller.add_to_cart(call)
@@ -92,18 +102,21 @@ def markup_preset(call, bot):
         keyboard.add(back_btn, cart_btn)
 
 
+
     elif call.data == call_kw['cart']:
         text = "Ваша корзина: \n"
         products = clients_controller.get_cart(call)
 
         for i in range(len(products)):
-            text = text + products[i]["maker"] + " " + products[i]["taste"] + "\n"
+            text = text + "-"+products[i]["maker"] + " " + products[i]["taste"] + "\n"
 
         book_btn = InlineKeyboardButton(text="Забронировать", callback_data="book")
 
         clear_btn = InlineKeyboardButton(text="Очистить корзину", callback_data="clear_cart")
         back_btn = InlineKeyboardButton(text="Назад ◀", callback_data='mainmenu')
         keyboard.add(clear_btn, back_btn)
+        photo = open(f"photos/cart.jpg", "rb")
+
         if len(products) > 0:
             keyboard.add(book_btn)
 
@@ -119,7 +132,7 @@ def markup_preset(call, bot):
 
         back_btn = InlineKeyboardButton(text="Назад ◀", callback_data='mainmenu')
         keyboard.add(back_btn)
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text=text,
+        bot.edit_message_caption(chat_id=call.message.chat.id, message_id=call.message.message_id, caption=text,
                               reply_markup=keyboard)
 
         keyboard_offer = InlineKeyboardMarkup()
@@ -215,5 +228,11 @@ def markup_preset(call, bot):
         minus_btn = InlineKeyboardButton(text="-1", callback_data="cat_minus")
         keyboard.add(plus_btn, minus_btn)
 
-    bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text=text,
-                          reply_markup=keyboard)
+    if photo != None:
+         bot.edit_message_media(chat_id=call.message.chat.id, message_id=call.message.message_id,
+                           media=InputMedia(type='photo', media=photo, caption=text), reply_markup= keyboard)
+    else:
+        try:
+            bot.edit_message_caption(chat_id=call.message.chat.id, message_id=call.message.message_id, caption=text, reply_markup=keyboard)
+        except:
+            bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text=text, reply_markup=keyboard)
