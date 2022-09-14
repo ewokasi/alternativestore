@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# v 10.09.22 pre-release
+# v 12.09.22 pre-release
 import telebot
 import catalog_controller
 import logging
@@ -9,23 +9,31 @@ from board_menu import markup_preset
 from datetime import datetime
 
 # Start settings
-logger = telebot.logger
-telebot.logger.setLevel(logging.DEBUG)
+#logger = telebot.logger
+#telebot.logger.setLevel(logging.DEBUG)
 Token = '5442133786:AAE-rRU7ZbFCkKbzvgazOEhdOoZ0tvd_CP4'
 Beta_Token = '5626676453:AAHACc2r_UNmVKPP5w7b3naBTT-8aKmPTpE'
 bot = telebot.TeleBot(Token)
 # reading list of user with permissions
-file = open(r"admins.txt")
+file = open(r"databases/admins.txt")
 admins = file.read().splitlines()
 file.close()
 
-
-# Greeting and tutorial
 @bot.message_handler(commands=["start"])
 def start_answer(message):
+    bot.send_message(message.chat.id, text="🔞Вам есть 18?🔞\n/yes - да, мне есть 18\n/no - нет, мне нет 18")
+
+
+@bot.message_handler(commands=["no"])
+def start_decline(message):
+    bot.send_message(chat_id= message.chat.id, text ="Наша продукция доступна только совершеннолетним")
+
+# Greeting and tutorial
+@bot.message_handler(commands=["yes"])
+def start_menu(message):
     # Recording visits from users
-    with open(r"clients.txt", "a") as clients:
-        clients.write(f"{message.chat.username} {message.chat.id} {datetime.today()} \n")
+    with open(r"databases/clients.txt", "a") as clients:
+        clients.write(f"@{message.chat.username} {message.chat.id} {datetime.today()} \n")
 
     # assembling the main menu keyboard
     photo = open("photos/mm.jpg", "rb")
@@ -34,10 +42,13 @@ def start_answer(message):
     setings_btn = InlineKeyboardButton(text="Корзина 🛒", callback_data="cart")
     call_btn = InlineKeyboardButton(text="Связаться с админом 👷", callback_data="call_admin")
     keyboard.add(catalog_btn, setings_btn, call_btn)
-    bot.send_photo(message.chat.id,photo= photo, caption ="Главное меню, вся навигация в этом окне через кнопки\n\nДля корректной работы бота проверьте, что у вас есть username, сделать вы это можете, нажав /username. В противном случае админ не сможет связаться с вами самостоятельно",
+    bot.send_photo(message.chat.id,photo= photo, caption ="Главное меню, вся навигация в этом окне через кнопки",
                      reply_markup=keyboard)
     photo.close()
-    bot.edit_message_media()
+    if message.chat.username == None:
+        bot.send_message(message.chat.id, text="⚠У вас отсутствует имя пользователя!⚠ \nВведите его в настройках "
+                                               "телеграм, иначе вы не сможете пользоваться всем функционалом бота, "
+                                               "а после отправьте /username")
 
 
 
@@ -169,11 +180,14 @@ def admin_help(message):
                "/removepos - удаляет последний продукт в каталоге\n\n" \
                "/cancelkey E-710 - позволяет вручную удалить заказ\n\n" \
                "/showbooks - показывает список всех активных заказов, также можно удалить заказ через кнопки\n\n" \
-               "/start - вызов главного меню"
+               "/start - вызов главного меню\n\n" \
+               "/clients - показывает клиентов, нарисавших /start \n\n"
     else:
         text = "Список команд \n\n" \
-                "/username - чтобы узнать своё имя пользователя для корректной обработки заказов" \
-                "/start - вызов главного меню"
+                "/username - чтобы узнать своё имя пользователя для корректной обработки заказов\n\n" \
+                "/start - вызов главного меню\n\n" \
+               "Если у тебя возникли трудности, напиши в поддержку @ewoksicilin\n\n"
+
 
     bot.send_message(message.chat.id, text=text)
 

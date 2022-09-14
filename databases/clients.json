@@ -8,12 +8,7 @@
     {
       "username": "ewoksicilin",
       "chat_id": 1931633887,
-      "cart": [
-        {
-          "maker": "MASSKING",
-          "taste": "\u0410\u0440\u0431\u0443\u0437 \ud83c\udf49"
-        }
-      ]
+      "cart": []
     },
     {
       "username": null,
@@ -23,16 +18,7 @@
     {
       "username": "GoodBoy0330",
       "chat_id": 1835580212,
-      "cart": [
-        {
-          "maker": "MASSKING",
-          "taste": "\u042f\u0431\u043b\u043e\u043a\u043e"
-        },
-        {
-          "maker": "HQD",
-          "taste": "\u041a\u0430\u043f\u0443\u0447\u0438\u043d\u043e"
-        }
-      ]
+      "cart": []
     },
     {
       "username": "paradisehell1",
@@ -42,6 +28,11 @@
     {
       "username": "ivaline",
       "chat_id": 570554640,
+      "cart": []
+    },
+    {
+      "username": "d_edyerorg",
+      "chat_id": 1133206133,
       "cart": []
     }
   ]

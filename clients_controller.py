@@ -7,7 +7,7 @@ def add_to_cart(call):
     chat_id = call.message.chat.id
     call.data = call.data.replace("to_cart ", "", 1)
 
-    with open("clients.json", 'r') as file:
+    with open("databases/clients.json", 'r') as file:
         db = json.load(file)
         clients = db['clients']
 
@@ -32,7 +32,7 @@ def add_to_cart(call):
         if offer["chat_id"] == client["chat_id"]:
             client["cart"].append(offer["cart"][0])
             db["clients"] = clients
-            with open("clients.json", 'w') as file:
+            with open("databases/clients.json", 'w') as file:
                 json.dump(db, file, indent=2)
 
             is_found = 1
@@ -41,7 +41,7 @@ def add_to_cart(call):
     if is_found == 0:
         clients.append(offer)
         db["clients"] = clients
-        with open("clients.json", 'w') as file:
+        with open("databases/clients.json", 'w') as file:
             json.dump(db, file, indent=2)
 
     return offer
@@ -51,7 +51,7 @@ def clear_cart(call):
     username = call.message.chat.username
     chat_id = call.message.chat.id
 
-    with open("clients.json", 'r') as file:
+    with open("databases/clients.json", 'r') as file:
         db = json.load(file)
         clients = db['clients']
 
@@ -59,7 +59,7 @@ def clear_cart(call):
         if client["chat_id"] == chat_id:
             client["cart"] = []
             db["clients"] = clients
-            with open("clients.json", 'w') as file:
+            with open("databases/clients.json", 'w') as file:
                 json.dump(db, file, indent=2)
             break
 
@@ -68,7 +68,7 @@ def get_cart(call):
     username = call.message.chat.username
     chat_id = call.message.chat.id
 
-    with open("clients.json", 'r') as file:
+    with open("databases/clients.json", 'r') as file:
         db = json.load(file)
         clients = db['clients']
 
@@ -82,10 +82,10 @@ def add_book(call):
     username = call.message.chat.username
     chat_id = call.message.chat.id
 
-    with open("books.json", 'r') as file:
+    with open("databases/books.json", 'r') as file:
         books_db = json.load(file)
 
-    with open("clients.json", 'r') as file:
+    with open("databases/clients.json", 'r') as file:
         clients_db = json.load(file)
         clients = clients_db["clients"]
 
@@ -101,7 +101,7 @@ def add_book(call):
         "cart": cart
     }
 
-    with open("books.json", "w") as file:
+    with open("databases/books.json", "w") as file:
         books_db["books"].append(client)
         json.dump(books_db, file, indent=2)
 
@@ -109,7 +109,7 @@ def add_book(call):
 
 
 def cancel_book(key):
-    with open("books.json", 'r') as file:
+    with open("databases/books.json", 'r') as file:
         db = json.load(file)
         books = db['books']
 
@@ -118,14 +118,14 @@ def cancel_book(key):
             deleted = book
             books.remove(book)
             db["books"] = books
-            with open("books.json", 'w') as file:
+            with open("databases/books.json", 'w') as file:
                 json.dump(db, file, indent=2)
 
             return deleted
 
 
 def get_books():
-    with open("books.json", 'r') as file:
+    with open("databases/books.json", 'r') as file:
         db = json.load(file)
         books = db['books']
 

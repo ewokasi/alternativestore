@@ -42,7 +42,7 @@ def separator(string, prefix='/', slicer=", "):
     return data
 
 
-def catalog_add(maker, taste, puffs, price=0, count=1, path="catalog.xlsx"):
+def catalog_add(maker, taste, puffs, price=0, count=1, path="databases/catalog.xlsx"):
     """
     Function for adding new product or increase count of existing product
     :param maker: name of comp
@@ -76,7 +76,7 @@ def catalog_add(maker, taste, puffs, price=0, count=1, path="catalog.xlsx"):
     wb.close()
 
 
-def catalog_del(maker, taste, path="catalog.xlsx"):
+def catalog_del(maker, taste, path="databases/catalog.xlsx"):
     """
     Deletes row from catalog
     :param maker:
@@ -104,7 +104,7 @@ def catalog_del(maker, taste, path="catalog.xlsx"):
     return info
 
 
-def catalog_sell(maker, taste, count=1, path="catalog.xlsx"):
+def catalog_sell(maker, taste, count=1, path="databases/catalog.xlsx"):
     """
     Decreases count of product, if last product - deletes row
     :param maker:
@@ -132,7 +132,7 @@ def catalog_sell(maker, taste, count=1, path="catalog.xlsx"):
     return found
 
 
-def remove_last_pos(path="catalog.xlsx"):
+def remove_last_pos(path="databases/catalog.xlsx"):
     """
     Function removes last product row from the catalog
     :param path: path to excel table (default "catalog.excel")
@@ -153,7 +153,7 @@ def remove_last_pos(path="catalog.xlsx"):
     wb.close()
 
 
-def get_makers(path="catalog.xlsx", column=1):
+def get_makers(path="databases/catalog.xlsx", column=1):
     """
     Get all unic makers from xlxs (default - 1 column of each row)
     :param path:
@@ -172,7 +172,7 @@ def get_makers(path="catalog.xlsx", column=1):
     return makers
 
 
-def get_products(maker, path="catalog.xlsx"):
+def get_products(maker, path="databases/catalog.xlsx"):
     wb = openpyxl.load_workbook(path)
     sheet = wb.active
     workcell = sheet.max_row
@@ -188,21 +188,24 @@ def get_products(maker, path="catalog.xlsx"):
     return products
 
 
-def find_product(maker, taste, path='catalog.xlsx'):
+def find_product(maker, taste, path='databases/catalog.xlsx'):
     wb = openpyxl.load_workbook(path)
     sheet = wb.active
-    info = []
+    info = {}
     for i in range(1, sheet.max_row + 1):
         if str(maker).lower() in str(sheet.cell(i, 1).value).lower() and str(taste).lower() in str(
                 sheet.cell(i, 2).value).lower():
-            for b in range(1, 6):
-                info.append(str(sheet.cell(i, b).value))
+            info['maker'] = sheet.cell(i,1).value
+            info['taste'] = sheet.cell(i, 2).value
+            info['puffs'] = sheet.cell(i, 3).value
+            info['price'] = sheet.cell(i, 4).value
+            info['count'] = sheet.cell(i, 5).value
             wb.close()
             return info
     return 'Not Found'
 
 
-def catalog_get(path='catalog.xlsx'):
+def catalog_get(path='databases/catalog.xlsx'):
     wb = openpyxl.load_workbook(path)
     sheet = wb.active
     catalog = []
@@ -221,7 +224,7 @@ def catalog_get(path='catalog.xlsx'):
     return catalog
 
 
-def catalog_change_count(maker, taste, num ,path ='catalog.xlsx'):
+def catalog_change_count(maker, taste, num ,path ='databases/catalog.xlsx'):
     wb = openpyxl.load_workbook(path)
     sheet = wb.active
     for i in range(1, sheet.max_row + 1):

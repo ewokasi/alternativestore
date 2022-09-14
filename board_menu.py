@@ -86,7 +86,7 @@ def markup_preset(call, bot):
         cb_product = call.data.split(sep=", ")
         info = catalog_controller.find_product(cb_product[0], cb_product[1])
 
-        text = f"{info[0]} {info[1]}\nТяг: {info[2]}\nЦена: {info[3]}\nВ наличии: {info[4]}"
+        text = f"{info['maker']} {info['taste']}\nТяг: {info['puffs']} 🌫\nЦена: {info['price']} руб. 💵\nВ наличии: {info['count']} 📦"
         back_btn = InlineKeyboardButton(text="Назад ◀", callback_data=f"{cb_product[0]}")
         add_to_cart = InlineKeyboardButton(text="В корзину 🛒", callback_data=f"to_cart {call.data}")
         keyboard.add(add_to_cart, back_btn)
@@ -108,7 +108,8 @@ def markup_preset(call, bot):
         products = clients_controller.get_cart(call)
 
         for i in range(len(products)):
-            text = text + "-"+products[i]["maker"] + " " + products[i]["taste"] + "\n"
+            product = catalog_controller.find_product(products[i]["maker"],products[i]["taste"])
+            text = text + "-"+product["maker"] + " " + product["taste"] +" "+ str(product["price"])+" руб." +"\n"
 
         book_btn = InlineKeyboardButton(text="Забронировать", callback_data="book")
 
@@ -139,11 +140,17 @@ def markup_preset(call, bot):
         cancel = InlineKeyboardButton(text="Отменить заказ ❌", callback_data="cancel")
         keyboard_offer.add(cancel)
 
-        bot.send_message(chat_id=call.message.chat.id, text=f"Номер заказа: #{info['key']}",
+        bot.send_message(chat_id=call.message.chat.id, text=f"Номер заказа: #{info['key']} \nИсполнитель скоро с вами свяжется.",
                          reply_markup=keyboard_offer)
 
-        bot.send_message(chat_id=1931633887,
-                         text=f"Новый заказ: #{info['key']}\nUsername @{info['username']}, {info['cart']}\n{info['chat_id']}")
+        offer_text = f"Новый заказ: #{info['key']}\nUsername @{info['username']}\n"
+
+        for i in info['cart']:
+            cat = f"-{i['maker']}: {i['taste']}\n"
+            offer_text = offer_text+ cat
+            print(text, cat)
+
+        bot.send_message(chat_id=1931633887, text=offer_text)
         clients_controller.clear_cart(call)
 
         for i in range(len(info["cart"])):
