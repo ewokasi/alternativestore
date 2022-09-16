@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# v 12.09.22 pre-release
+# v 14.09.22 release
 import telebot
 import catalog_controller
 import logging
@@ -13,7 +13,7 @@ from datetime import datetime
 #telebot.logger.setLevel(logging.DEBUG)
 Token = '5442133786:AAE-rRU7ZbFCkKbzvgazOEhdOoZ0tvd_CP4'
 Beta_Token = '5626676453:AAHACc2r_UNmVKPP5w7b3naBTT-8aKmPTpE'
-bot = telebot.TeleBot(Token)
+bot = telebot.TeleBot(Beta_Token)
 # reading list of user with permissions
 file = open(r"databases/admins.txt")
 admins = file.read().splitlines()
